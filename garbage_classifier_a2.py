@@ -249,7 +249,7 @@ class MultimodalClassifier(nn.Module):
     super().__init__()
 
     # Image encoder: ResNet-18
-    self.resnet = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+    self.resnet = models.resnet18(pretrained=True)
     img_dim = self.resnet.fc.in_features # Get dimension before classification layer
     self.resnet.fc = nn.Identity() # remove final classifier
 

@@ -1,0 +1,11 @@
+              precision    recall  f1-score   support
+
+       Black     0.6771    0.6849    0.6810       695
+        Blue     0.7575    0.9033    0.8240      1086
+       Green     0.8467    0.9124    0.8783       799
+         TTR     0.9162    0.6162    0.7368       852
+
+    accuracy                         0.7899      3432
+   macro avg     0.7994    0.7792    0.7800      3432
+weighted avg     0.8014    0.7899    0.7861      3432
+
