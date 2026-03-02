@@ -287,6 +287,7 @@ print(model)
 
 """## 7. Train / Eval helpers"""
 
+# One full pass over the training DataLoader
 # Training loop for standard PyTorch
 # Zero gradients, forward, compute loss, backward, update
 def train_one_epoch(model, loader, optimizer, criterion, device):
@@ -294,21 +295,24 @@ def train_one_epoch(model, loader, optimizer, criterion, device):
     total_loss = 0.0
 
     for batch in tqdm(loader, desc="train", leave=False):
+        # move tensors to device
         images = batch["image"].to(device)
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["label"].to(device)
 
-        optimizer.zero_grad(set_to_none=True)
-        logits = model(images, input_ids, attention_mask)
-        loss = criterion(logits, labels)
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad(set_to_none=True) # Clear gradients
+        logits = model(images, input_ids, attention_mask) # Forward pass
+        loss = criterion(logits, labels) # Loss computation
+        loss.backward() # Backward pass
+        optimizer.step() # Parameter update
 
         total_loss += loss.item()
 
-    return total_loss / max(len(loader), 1)
+    # return average loss per batch
+    return total_loss / max(len(loader), 1) # prevent divide by zero
 
+# One full pass over validation DataLoader
 @torch.no_grad()
 def eval_one_epoch(model, loader, criterion, device):
     model.eval()
@@ -322,10 +326,12 @@ def eval_one_epoch(model, loader, criterion, device):
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["label"].to(device)
 
-        logits = model(images, input_ids, attention_mask)
+        logits = model(images, input_ids, attention_mask) # Forward pass only for eval
         loss = criterion(logits, labels)
         total_loss += loss.item()
 
+        # Return average loss and accuracy
+        # Accuracy = correct predictions over total predictions
         preds = torch.argmax(logits, dim=1)
         correct += (preds == labels).sum().item()
         total += labels.size(0)
@@ -334,6 +340,7 @@ def eval_one_epoch(model, loader, criterion, device):
     acc = correct / max(total, 1)
     return avg_loss, acc
 
+# Predict helper for test set evaluation and metadata
 @torch.no_grad()
 def predict(model, loader, device):
     model.eval()
@@ -377,11 +384,11 @@ def save_history_csv(history_dict, out_path):
     import csv
     with open(out_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["epoch", "train_loss", "val_loss", "val_acc"])
+        w.writerow(["epoch", "train_loss", "val_loss", "val_acc"]) # header row
         for i in range(len(history_dict["train_loss"])):
             w.writerow([i + 1, history_dict["train_loss"][i], history_dict["val_loss"][i], history_dict["val_acc"][i]])
 
-history = {"train_loss": [], "val_loss": [], "val_acc": []}
+history = {"train_loss": [], "val_loss": [], "val_acc": []} # Save for curves
 
 for epoch in range(cfg.epochs):
     tr_loss = train_one_epoch(model, train_loader, optimizer, criterion, device)
@@ -402,6 +409,7 @@ print("Best val loss:", best_val_loss)
 
 """## 9. Plot training curves"""
 
+# Loss Curve
 plt.figure()
 plt.plot(history["train_loss"], label="train_loss")
 plt.plot(history["val_loss"], label="val_loss")
@@ -413,6 +421,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(OUT_DIR, "loss_curves.png"), dpi=200)
 plt.close()
 
+# Validation Accuracy Curve
 plt.figure()
 plt.plot(history["val_acc"], label="val_acc")
 plt.xlabel("epoch")
