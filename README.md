@@ -1,5 +1,9 @@
 # Multimodal Garbage Classifier
 
+ENSF 617 Assignment 2: Garbage Classification Model 
+
+Group 6: Ben Cacic, Cassius Samaco, Truman Huang, Kundai Dziwa.
+
 ## Overview
 This project implements a multimodal deep learning model to classify garbage into four categories: **Black**, **Blue**, **Green**, and **TTR**. The model leverages both visual data (images) and textual context (derived from filenames).
 
