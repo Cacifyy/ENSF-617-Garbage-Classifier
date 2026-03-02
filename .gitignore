@@ -2,3 +2,7 @@ best_multimodal.pth
 *.pth
 best_multimodal.pth
 *.pth
+
+# model weights
+*.pth
+best_multimodal.pth
