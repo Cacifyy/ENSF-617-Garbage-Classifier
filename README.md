@@ -24,3 +24,6 @@ This project implements a multimodal deep learning model to classify garbage int
 - Transformers (HuggingFace)
 - Scikit-learn
 - Matplotlib
+
+## Detail Training Result
+:
