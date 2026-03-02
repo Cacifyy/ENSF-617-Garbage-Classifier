@@ -14,8 +14,8 @@ This project implements a multimodal deep learning model to classify garbage int
 - **Key Observation:** The model performs exceptionally well on Blue and Green bins but faces challenges distinguishing between TTR and Black bins.
 
 ## How to Run
-1. Ensure the dataset is located in the paths specified in the `Config` class.
-2. Run the training script: `python garbage_classifier_a2.py`.
+1. Ensure the dataset is located in the correct file paths.
+2. Run the training script.
 3. Outputs (plots, best model checkpoint, and classification reports) will be saved in the `/outputs` directory.
 
 ## Requirements
